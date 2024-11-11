@@ -1,6 +1,6 @@
-
-import "../../style/contactUs.css"
-
+import "../../style/contactUs.css";
+import axios from "axios";
+import React, { useState } from "react";
 
 function Contact() {
   return (
@@ -48,23 +48,82 @@ function ContactInfo() {
     </div>
   );
 }
+
 function Form() {
+  const [formData, setFormData] = useState({
+    email: "",
+    phone: "",
+    subject: "",
+    message: "",
+  });
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/contact",
+        formData
+      );
+      if (response.data.success) {
+        alert("Message sent successfully!");
+      }
+    } catch (error) {
+      setErrorMessage("There was an error sending the message.");
+    }
+  };
+
   return (
-    <form action="" className="contact-form">
-      <h1 className="contact-title">we love to hear from you</h1>
-      <input type="email" name="email" id="email" placeholder="Your Email" />
-      <input type="text" name="phone" id="phone" placeholder="Phone Number" />
-      <input type="text" name="subject" id="subject" placeholder="Subject" />
+    <form onSubmit={handleSubmit} className="contact-form">
+      <h1 className="contact-title">We love to hear from you</h1>
+      <input
+        type="email"
+        name="email"
+        id="email"
+        placeholder="Your Email"
+        value={formData.email}
+        onChange={handleChange}
+      />
+      <input
+        type="text"
+        name="phone"
+        id="phone"
+        placeholder="Phone Number"
+        value={formData.phone}
+        onChange={handleChange}
+      />
+      <input
+        type="text"
+        name="subject"
+        id="subject"
+        placeholder="Subject"
+        value={formData.subject}
+        onChange={handleChange}
+      />
       <textarea
         name="message"
         id="message"
-        placeholder="write a message...."></textarea>
+        placeholder="Write a message...."
+        value={formData.message}
+        onChange={handleChange}
+      ></textarea>
       <button type="submit">
-        send message <i className="fa-solid fa-angles-right"></i>
+        Send Message <i className="fa-solid fa-angles-right"></i>
       </button>
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
     </form>
   );
 }
+
 function Info({ children, title }) {
   return (
     <div className="info-form">
@@ -82,7 +141,8 @@ function Map() {
         /* style={"border: 0"} */
         allowfullscreen=""
         loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade"></iframe>
+        referrerpolicy="no-referrer-when-downgrade"
+      ></iframe>
     </section>
   );
 }
