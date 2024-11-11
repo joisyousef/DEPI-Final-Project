@@ -4,5 +4,5 @@ Dockerfile
 .dockerignore
 .git
 
-server/node_modules
-client/node_modules
+Frontend/node_modules
+Backend/node_modules
